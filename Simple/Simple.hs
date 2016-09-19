@@ -45,7 +45,13 @@ cHelp n i
 -- Definieren Sie ein endrekurive Variante von c
     
 c1      :: Integer -> Integer
-c1 = 
+c1 = c1' 0
+	where
+	c1' :: Integer -> Integer -> Integer
+	c1' r n 
+		| n == 1	= r 
+		| n `mod`2 == 0 = c1' (r+1) (n `div`2)
+		| otherwise		= c1' (r+1) (3*n + 1)
 
 
 -- Definieren Sie eine Funktion cmax, die für ein
@@ -54,7 +60,10 @@ c1 =
 -- vordefinierten Funkt min und max.
 
 cmax    :: Integer -> Integer -> Integer
-cmax lb ub = undefined
+cmax lb ub
+	| lb > ub 	= error "empty intervall"
+	| lb == ub	= c lb
+	| otherwise	= c lb `max` cmax (lb+1) ub
 
 
 -- Definieren Sie eine Funktion imax, die für ein
@@ -63,7 +72,10 @@ cmax lb ub = undefined
 -- Sie die obige Funktion cmax so um, dass sie mit imax arbeitet.
 
 imax    :: (Integer -> Integer) -> Integer -> Integer -> Integer
-imax f lb ub = undefined
+imax f lb ub
+     | lb > ub 		= error "empty intervall"
+     | lb == ub 	= f lb
+     | otherwise 	= imax f (lb + 1) ub `max` f lb
 
 
 cmax1   :: Integer -> Integer -> Integer
