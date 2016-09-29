@@ -9,52 +9,55 @@ type List a = [a] -> [a]
 -- ----------------------------------------
 
 fromList        :: [a] -> List a
-fromList l      = undefined
+fromList xs    = \ list -> xs ++ list  
 
 toList          :: List a -> [a]
-toList l        = undefined
+toList xs      = xs []
 
 empty           :: List a
-empty           = undefined
+empty           = \x -> []
 
 singleton       :: a -> List a
-singleton e     = undefined
+singleton x     = fromList [x]
 
 -- (:) for functional lists
 cons            :: a -> List a -> List a
-cons e l        = undefined
+cons x list        = \xs -> x : list xs 
 
 -- dual to cons
 snoc            :: List a -> a -> List a
-snoc l e        = undefined
+snoc list x        = list `append`(singleton x)
 
 -- (++) for functional lists
 append          :: List a -> List a -> List a
-append l1 l2    = undefined
+append list1 list2    = fromList((toList list1)++(toList list2))
+
+
+---  \xs -> list1 (list2 xs) 
 
 -- like concat for normal lists: foldr (++) []
 concat          :: [List a] -> List a
-concat          = undefined
+concat xs         = P.foldr append empty xs
 
 -- like map for normal lists: foldr ((:) . f) []
 map             :: (a -> b) -> List a -> List b
-map f           = undefined
+map f list          =   fromList( P.map f (toList list))
 
 -- foldr with foldr for normal lists
 foldr           :: (a -> b -> b) -> b -> List a -> b
-foldr op n      = undefined
+foldr op n list     = P.foldr op n (toList list)
 
 -- head, tail, null
 head            :: List a -> a
-head            = undefined
+head list           = P.head (toList list)
 
 tail            :: List a -> List a
-tail            = undefined
+tail list           = fromList(P.tail (toList list))
 
 null            :: List a -> Bool
-null            = undefined
+null list           = P.null (toList list)
 
 reverse         :: List a -> List a
-reverse         = undefined
+reverse list        =  fromList (P.reverse (toList list))
 
 -- ----------------------------------------

@@ -11,9 +11,8 @@ type Interval = (Int, Int)
 
 overlap :: Interval -> Interval -> Bool
 overlap (x1, y1) (x2, y2)
-  | x1 >= x2 && x1 <= y2 	= True
-  | y1 <= y2 && y1 >= x2 	= True
-  | otherwise 				= False
+    | x1 <= x2  = y1+1 >= x2
+    | otherwise = overlap (x2, y2) (x1, y1)
 --überlappen sie oder stoßen sie an einander??
 
 less :: Interval -> Interval -> Bool
@@ -23,7 +22,7 @@ less (_x1, y1) (x2, _y2)
 --für die Ordnung
                            
 emptyInterval :: Interval -> Bool
-emptyInterval (x, y) = x>=y
+emptyInterval (x, y) = x>y
 
 --ist es empty??
 
@@ -49,14 +48,15 @@ type IntervalSet = [Interval]
 inv :: IntervalSet -> Bool
 inv [] = True
 inv [x] = not (emptyInterval x)
-inv (x1:x2:xs) = 
+inv (x1:x2:xss) = 
        not (emptyInterval x1) 
        &&
        not (overlap x1 x2)
        &&
        less x1 x2
        && 
-       inv (x2:xs)
+       inv (x2:xss)
+--überprüfen ob alle Konstistenzbedingungen erfüllt overlap, empty richtige Reihenfole
 
 
 -- ----------------------------------------
